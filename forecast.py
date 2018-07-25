@@ -24,6 +24,5 @@ def calc_range_returns(number, fmv_usd_lo, fmv_usd_hi, usd_to_nok_market_lo, usd
     return fmv_range, returns_range
 
 def scatter_plot(x_range, y_range):
-    figure, axes = subplots()
-    axes.scatter(x_range, y_range)
+    scatter(x_range, y_range)
     show()
