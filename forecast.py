@@ -1,5 +1,30 @@
 import random
-from matplotlib.pyplot import *
+import requests
+from matplotlib import pyplot
+
+def get_stock_data(symbol):
+    #data provided by alpha vantage API
+    url_base = 'https://www.alphavantage.co/query'
+    API_key = 'SYDT0ACA1X9YPHOM'
+    payload = {
+      'function': 'TIME_SERIES_DAILY',
+      'symbol': symbol,
+      'apikey': API_key
+    }
+    response = requests.get(url_base, params=payload)
+    return response.json()
+
+def get_FX_data(currency, date):
+    #data provided by currencylayer API. non-USD-based rates cost money
+    url_base = 'http://apilayer.net/api/historical'
+    API_key = '30066134cd1ff0a3811c03fd1b12f307'
+    payload = {
+      'access_key': API_key,
+      'date': date,
+      'currencies': currency
+    }
+    response = requests.get(url_base, params=payload)
+    return response.json()
 
 def calc_nok_net_return(net_proceeds_usd, usd_to_nok_market, commission):
     return net_proceeds_usd / (usd_to_nok_market * (1 - commission))
@@ -24,7 +49,6 @@ def calc_range_returns(number, fmv_usd_lo, fmv_usd_hi, usd_to_nok_market_lo, usd
     return fmv_range, returns_range
 
 def scatter_plot(x_range, y_range, mask):
-    scatter(x_range, y_range)
-    x_limits = [min(x_range), max(x_range)]
-    plot(x_limits, [mask, mask])
-    show()
+    pyplot.scatter(x_range, y_range)
+    pyplot.plot([min(x_range), max(x_range)], [mask, mask])
+    pyplot.show()
