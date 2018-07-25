@@ -27,7 +27,7 @@ def get_FX_data(currency, date):
     return response.json()
 
 def calc_nok_net_return(net_proceeds_usd, usd_to_nok_market, commission):
-    return net_proceeds_usd / (usd_to_nok_market * (1 - commission))
+    return net_proceeds_usd * usd_to_nok_market * (1 - commission)
 
 def calc_net_proceeds_usd(number, fmv_usd):
     gross_proceeds = number * fmv_usd
@@ -45,6 +45,18 @@ def random_range_returns(number, fmv_usd_lo, fmv_usd_hi, usd_to_nok_market_lo, u
         net_proceeds_usd = calc_net_proceeds_usd(number, fmv_usd_scenario)
         net_proceeds_nok = calc_nok_net_return(net_proceeds_usd, usd_to_nok_scenario, commission)
         fmv_range.append(fmv_usd_scenario)
+        returns_range.append(net_proceeds_nok)
+    return fmv_range, returns_range
+
+def calc_range_returns(symbol, number, currency, commission):
+    raw_stock_data = get_stock_data(symbol)['Time Series (Daily)']
+    fmv_range, returns_range = [], []
+    for date in raw_stock_data:
+        fmv_usd = float(raw_stock_data[date]['4. close'])
+        usd_to_nok_market = get_FX_data(currency, date)['quotes']['USD' + currency]
+        net_proceeds_usd = calc_net_proceeds_usd(number, fmv_usd)
+        net_proceeds_nok = calc_nok_net_return(net_proceeds_usd, usd_to_nok_market, commission)
+        fmv_range.append(fmv_usd)
         returns_range.append(net_proceeds_nok)
     return fmv_range, returns_range
 
