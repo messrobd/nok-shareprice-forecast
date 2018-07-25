@@ -28,16 +28,18 @@ def get_FX_data(currency, date):
     response = requests.get(url_base, params=payload)
     return response.json()
 
-def write_cache_file(data):
+def make_cache_path():
     directory = os.path.dirname(__file__)
-    full_path = directory + '/' + 'cache'
+    return directory + '/' + 'cache'
+
+def write_cache_file(data):
+    full_path = make_cache_path()
     cache_file = open(full_path, 'w')
     json.dump(data, cache_file)
     cache_file.close()
 
 def read_cache_file():
-    directory = os.path.dirname(__file__)
-    full_path = directory + '/' + 'cache'
+    full_path = make_cache_path()
     cache_file = open(full_path)
     data =  json.load(cache_file)
     cache_file.close()
