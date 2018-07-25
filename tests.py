@@ -7,7 +7,7 @@ currency = 'NOK'
 #fmv_usd_hi = 70
 #usd_to_nok_market_lo = usd_to_nok_market = 0.125
 #usd_to_nok_market_hi = 0.12
-commission = 0.02
+commission = 0.0
 fmv_usd_purchase = 67.43
 usd_to_nok_market_purchase = 8.1588
 purchase = number * fmv_usd_purchase * usd_to_nok_market_purchase
@@ -22,9 +22,8 @@ prices, returns = random_range_returns(number, fmv_usd_lo, fmv_usd_hi, usd_to_no
 scatter_plot(prices, returns, purchase)
 '''
 
-#calc_range_returns(symbol, number, currency, commission, True)
-data = read_cache_file()
-prices = data['fmv_usd']
-returns = data['returns_range']
+#make_price_dataset(symbol, currency, True)
+dataset = read_cache_file()
+prices, returns = calc_range_returns(dataset, number, commission)
 
 scatter_plot(prices, returns, purchase)

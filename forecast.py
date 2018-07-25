@@ -45,6 +45,16 @@ def read_cache_file():
     cache_file.close()
     return data
 
+def make_price_dataset(symbol, currency, cache=False):
+    raw_stock_data = get_stock_data(symbol)['Time Series (Daily)']
+    for date in raw_stock_data:
+        usd_to_nok_market = get_FX_data(currency, date)['quotes']['USD' + currency]
+        raw_stock_data[date]['usd_to_nok_market'] = usd_to_nok_market
+    if cache:
+        write_cache_file(raw_stock_data)
+    else:
+        return raw_stock_data
+
 def calc_nok_net_return(net_proceeds_usd, usd_to_nok_market, commission):
     return net_proceeds_usd * usd_to_nok_market * (1 - commission)
 
@@ -67,23 +77,16 @@ def random_range_returns(number, fmv_usd_lo, fmv_usd_hi, usd_to_nok_market_lo, u
         returns_range.append(net_proceeds_nok)
     return fmv_range, returns_range
 
-def calc_range_returns(symbol, number, currency, commission, cache=False):
-    raw_stock_data = get_stock_data(symbol)['Time Series (Daily)']
+def calc_range_returns(price_dataset, number, commission):
     fmv_range, returns_range = [], []
-    for date in raw_stock_data:
-        fmv_usd = float(raw_stock_data[date]['4. close'])
-        usd_to_nok_market = get_FX_data(currency, date)['quotes']['USD' + currency]
+    for date in price_dataset:
+        fmv_usd = float(price_dataset[date]['4. close'])
+        usd_to_nok_market = price_dataset[date]['usd_to_nok_market']
         net_proceeds_usd = calc_net_proceeds_usd(number, fmv_usd)
         net_proceeds_nok = calc_nok_net_return(net_proceeds_usd, usd_to_nok_market, commission)
         fmv_range.append(fmv_usd)
         returns_range.append(net_proceeds_nok)
-    if cache:
-        data = {}
-        data['fmv_usd'] = fmv_range
-        data['returns_range'] = returns_range
-        write_cache_file(data)
-    else:
-        return fmv_range, returns_range
+    return fmv_range, returns_range
 
 def scatter_plot(x_range, y_range, mask):
     pyplot.scatter(x_range, y_range)
