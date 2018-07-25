@@ -1,6 +1,8 @@
 from forecast import *
 
 number = 93
+symbol = 'SLB'
+currency = 'NOK'
 #fmv_usd_lo = fmv_usd = 67.00
 #fmv_usd_hi = 70
 #usd_to_nok_market_lo = usd_to_nok_market = 0.125
@@ -19,9 +21,10 @@ prices, returns = random_range_returns(number, fmv_usd_lo, fmv_usd_hi, usd_to_no
 
 scatter_plot(prices, returns, purchase)
 '''
-symbol = 'SLB'
-currency = 'NOK'
 
-prices, returns = calc_range_returns(symbol, number, currency, commission)
+#calc_range_returns(symbol, number, currency, commission, True)
+data = read_cache_file()
+prices = data['fmv_usd']
+returns = data['returns_range']
 
 scatter_plot(prices, returns, purchase)

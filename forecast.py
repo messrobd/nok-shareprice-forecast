@@ -1,5 +1,7 @@
 import random
 import requests
+import os
+import json
 from matplotlib import pyplot
 
 def get_stock_data(symbol):
@@ -26,6 +28,21 @@ def get_FX_data(currency, date):
     response = requests.get(url_base, params=payload)
     return response.json()
 
+def write_cache_file(data):
+    directory = os.path.dirname(__file__)
+    full_path = directory + '/' + 'cache'
+    cache_file = open(full_path, 'w')
+    json.dump(data, cache_file)
+    cache_file.close()
+
+def read_cache_file():
+    directory = os.path.dirname(__file__)
+    full_path = directory + '/' + 'cache'
+    cache_file = open(full_path)
+    data =  json.load(cache_file)
+    cache_file.close()
+    return data
+
 def calc_nok_net_return(net_proceeds_usd, usd_to_nok_market, commission):
     return net_proceeds_usd * usd_to_nok_market * (1 - commission)
 
@@ -48,7 +65,7 @@ def random_range_returns(number, fmv_usd_lo, fmv_usd_hi, usd_to_nok_market_lo, u
         returns_range.append(net_proceeds_nok)
     return fmv_range, returns_range
 
-def calc_range_returns(symbol, number, currency, commission):
+def calc_range_returns(symbol, number, currency, commission, cache=False):
     raw_stock_data = get_stock_data(symbol)['Time Series (Daily)']
     fmv_range, returns_range = [], []
     for date in raw_stock_data:
@@ -58,7 +75,13 @@ def calc_range_returns(symbol, number, currency, commission):
         net_proceeds_nok = calc_nok_net_return(net_proceeds_usd, usd_to_nok_market, commission)
         fmv_range.append(fmv_usd)
         returns_range.append(net_proceeds_nok)
-    return fmv_range, returns_range
+    if cache:
+        data = {}
+        data['fmv_usd'] = fmv_range
+        data['returns_range'] = returns_range
+        write_cache_file(data)
+    else:
+        return fmv_range, returns_range
 
 def scatter_plot(x_range, y_range, mask):
     pyplot.scatter(x_range, y_range)
