@@ -3,7 +3,7 @@ import requests
 from matplotlib import pyplot
 
 def get_stock_data(symbol):
-    #data provided by alpha vantage API
+    #data provided by alpha vantage API. last 100 days returned by default
     url_base = 'https://www.alphavantage.co/query'
     API_key = 'SYDT0ACA1X9YPHOM'
     payload = {
@@ -36,7 +36,7 @@ def calc_net_proceeds_usd(number, fmv_usd):
     other_fees = gross_proceeds * 0.0008 + 10.017
     return gross_proceeds - trading_fee - wire_fee - other_fees
 
-def calc_range_returns(number, fmv_usd_lo, fmv_usd_hi, usd_to_nok_market_lo, usd_to_nok_market_hi, commission):
+def random_range_returns(number, fmv_usd_lo, fmv_usd_hi, usd_to_nok_market_lo, usd_to_nok_market_hi, commission):
     fmv_range = []
     returns_range = []
     for i in range(0, 200):
