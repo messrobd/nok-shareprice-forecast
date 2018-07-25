@@ -23,6 +23,8 @@ def calc_range_returns(number, fmv_usd_lo, fmv_usd_hi, usd_to_nok_market_lo, usd
         returns_range.append(net_proceeds_nok)
     return fmv_range, returns_range
 
-def scatter_plot(x_range, y_range):
+def scatter_plot(x_range, y_range, mask):
     scatter(x_range, y_range)
+    x_limits = [min(x_range), max(x_range)]
+    plot(x_limits, [mask, mask])
     show()
