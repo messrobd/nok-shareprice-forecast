@@ -14,7 +14,7 @@ def calc_net_proceeds_usd(number, fmv_usd):
 def calc_range_returns(number, fmv_usd_lo, fmv_usd_hi, usd_to_nok_market_lo, usd_to_nok_market_hi, commission):
     fmv_range = []
     returns_range = []
-    for i in range(0, 10):
+    for i in range(0, 100):
         fmv_usd_scenario = random.uniform(fmv_usd_lo,fmv_usd_hi)
         usd_to_nok_scenario = random.uniform(usd_to_nok_market_lo, usd_to_nok_market_hi)
         net_proceeds_usd = calc_net_proceeds_usd(number, fmv_usd_scenario)
@@ -25,5 +25,5 @@ def calc_range_returns(number, fmv_usd_lo, fmv_usd_hi, usd_to_nok_market_lo, usd
 
 def scatter_plot(x_range, y_range):
     figure, axes = subplots()
-
+    axes.scatter(x_range, y_range)
     show()

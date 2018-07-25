@@ -7,5 +7,11 @@ usd_to_nok_market_lo = usd_to_nok_market = 0.125
 usd_to_nok_market_hi = 0.12
 commission = 0.02
 
+'''
 print calc_net_proceeds_usd(10, fmv_usd)
 print calc_range_returns(number, fmv_usd_lo, fmv_usd_hi, usd_to_nok_market_lo, usd_to_nok_market_hi, commission)
+'''
+
+x_range, y_range = calc_range_returns(number, fmv_usd_lo, fmv_usd_hi, usd_to_nok_market_lo, usd_to_nok_market_hi, commission)
+
+scatter_plot(x_range, y_range)
